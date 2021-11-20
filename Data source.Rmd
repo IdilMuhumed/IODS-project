@@ -1,0 +1,15 @@
+---
+title: "Exercise 3"
+output: html_document
+---
+
+```{r}
+source <- "http://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip"
+dest <- "~/IODS-project/data/student.zip"
+setwd("~/IODS-project")
+
+download.file(source,dest)
+unzip(dest,exdir="~/IODS-project/data/student")
+
+```
+

@@ -29,3 +29,11 @@ y = cbind(x$Age, x$gender, x$attitude, x$stra, x$surf, x$deep, x$Points)
 head(y)
 dim(y)
 
+setwd("~/IODS-project")
+
+write.csv(data, "create_learning2014.csv")
+
+data <- "create_learning2014"
+
+
+
