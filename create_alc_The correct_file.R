@@ -4,7 +4,7 @@
 #The data source is :
   "http://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip"
 
-  write.table("create_alc.R", "data/create_alc.R")
+  write.table("create_alc_The correct_file.R", "data/create_alc_The correct_file.R")
  
   
 por <- read.table ("~/IODS-project/data/student/student-por.csv", sep = ";", header=TRUE)
