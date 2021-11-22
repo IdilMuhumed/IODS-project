@@ -4,9 +4,12 @@ output: html_document
 ---
 
 ```{r}
-pormath
+install.packages("readxl")
+library(readxl)
+pormath <- read_excel("~/IODS-project/data/pormath.xlsx")
 colnames(pormath)
 str(pormath)
+
 # Pormath data tell about student achievements in secondary education of two Portuguese schools. It consists of 370 observations and 51 variables.
 
 # The 4 variables I am choosing are: age, gender, absences and quality of family relationship. My hypothesis is that alcohol consumption has positive relationship with age, being Male, having more school absences and poor family relationship.
@@ -28,7 +31,7 @@ boxplot(pormath$famrel)
 
 class(pormath$alc_use)
 
-#Let's check associations between chosen variables and the dependent variable. As my dependent variable is numeric and I cannot use cross-tabs I will use Pearson's correlation.
+#Let's check associations between chosen variables and the dependent variable. As my dependent variable is numeric and I cannot use cross-tabs I will use Pearson's correlation and point-biserial correlation.
 
 cor(pormath$famrel, pormath$alc_use)
 # famrel: numeric: from 1 - very bad to 5 - excellent)
@@ -49,6 +52,7 @@ table(as.numeric(pormath$sex), pormath$sex)
 
 #Labels look fine. Point-biserial correlation is used to assess the relationship between continues variable and categorical variable
 install.packages("ltm")
+library(ltm)
 biserial.cor(pormath$alc_use, pormath$sex)
 
 #It seems my hypothesis has gone wrong. There is positive association between being Female and alcohol consumption. 
@@ -62,37 +66,20 @@ table(as.numeric(pormath$high_use), pormath$high_use)
 glm.1 = glm(pormath$high_use ~ sex + absences + famrel + age, data = pormath, family = "binomial")
 summary(glm.1)
 
-# From the model summary, we can see that being Male increases the odds of alcohol high consumption and it is statistically significant. Same goes to the absences, having more absences increases the odds of high alcohol consumption and is again statistically significant. Age is not statistically significant predictor of alcohol high consumption. Again poor family relationship increases the odds of alcohol consumption and is not statistically significant.
+# From the model summary, we can see that being Male increases the odds of alcohol high consumption and it is statistically significant. Same goes to the absences, having more absences increases the odds of high alcohol consumption and is again statistically significant. Age is not statistically significant predictor of alcohol high consumption. Again poor family relationship increases the odds of alcohol consumption and is not statistically significant. I am rejecting my hypothesis regarding association between age and alcohol consumption as well as in regard to the correlation between gender and alcohol consumption. I am accepting my two other hypothesis. Let's generate a 95% Confidence Intervals for the coefficients. 
 
-pormath$sex
-install.packages("ltm")
-biserial.cor(pormath$alc_use, pormath$sex)
-table(as.numeric(pormath$sex), pormath$sex)
-pormath$sex <- factor(pormath$sex)
-levels = c("0", "1")
-labels = c("F", "M")
-levels(pormath$sex)
-table(as.numeric(pormath$high_use), pormath$high_use)
-
-library(dplyr)
-glimpse(pormath$alc_use)
-levels(pormath$alc_use)
-var_label(pormath$alc_use)
-info
-pormath$alc_use
-install.packages("labelled")
-library(labelled)
-var_label(pormath$sex)
+confint(glm.1)
 
 
-library(ggplot2)
-library(GGally)
+install.packages("tidyverse")
+library(tidyverse)
 
-
-ggpairs(pormath,
-upper = list(continuous = "density", combo = "box_no_facet"),
-lower = list(continuous = "points", combo = "dot_no_facet"))
+probabilities <- glm.1 %>% predict(pormath, type = "response")
+head(probabilities) 
+```
 ```
 
 
-```{r}
+
+
+
