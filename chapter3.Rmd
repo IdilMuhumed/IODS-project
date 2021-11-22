@@ -4,7 +4,8 @@ output: html_document
 ---
 
 ```{r}
-install.packages("readxl")
+
+                 
 library(readxl)
 pormath <- read_excel("~/IODS-project/data/pormath.xlsx")
 colnames(pormath)
