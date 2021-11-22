@@ -3,26 +3,96 @@ title: "Exercise 3"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
+pormath
+colnames(pormath)
+str(pormath)
+# Pormath data tell about student achievements in secondary education of two Portuguese schools. It consists of 370 observations and 51 variables.
+
+# The 4 variables I am choosing are: age, gender, absences and quality of family relationship. My hypothesis is that alcohol consumption has positive relationship with age, being Male, having more school absences and poor family relationship.
+class(pormath$sex)
+table1 <- table(pormath$sex)
+prop.table(table1)
+
+class(pormath$age)
+hist(pormath$age, col = "lime green", main = "age")
+boxplot(pormath$age)
+
+class(pormath$absences)
+hist(pormath$absences, col = "red", main = "absences")
+boxplot(pormath$absences)
+
+class(pormath$famrel)
+hist(pormath$famrel, col = "orange", main = "famrel")
+boxplot(pormath$famrel)
+
+class(pormath$alc_use)
+
+#Let's check associations between chosen variables and the dependent variable. As my dependent variable is numeric and I cannot use cross-tabs I will use Pearson's correlation.
+
+cor(pormath$famrel, pormath$alc_use)
+# famrel: numeric: from 1 - very bad to 5 - excellent)
+#It shows that there is a positive association between poor family relationship and alcohol consumption. My hypothesis was right.
+cor(pormath$age, pormath$alc_use)
+#It again shows that there is a positive association between age and alcohol consumption. My hypothesis was right.
+cor(pormath$alc_use, pormath$absences)
+I# Here it also shows that there is a positive association between absences and alcohol consumption. My hypothesis was right.
+
+# as my dependent variable is a continues variable, I cannot use crosstabs. We can see in the below command that sex variable is categorical with labels "F" and "M". I want to change those labels with numbers F=0 and M=1.
+pormath$sex <- factor(pormath$sex)
+levels = c("0", "1")
+labels = c("F", "M")
+levels(pormath$sex)
+
+#Let's check the applied labels:
+table(as.numeric(pormath$sex), pormath$sex)
+
+#Labels look fine. Point-biserial correlation is used to assess the relationship between continues variable and categorical variable
+install.packages("ltm")
+biserial.cor(pormath$alc_use, pormath$sex)
+
+#It seems my hypothesis has gone wrong. There is positive association between being Female and alcohol consumption. 
+
+#)Task num.5
+#Let's again check value labels of high_use variable
+table(as.numeric(pormath$high_use), pormath$high_use)
+
+#I believe that 0 is labeled as low use and 1 high_use
+
+glm.1 = glm(pormath$high_use ~ sex + absences + famrel + age, data = pormath, family = "binomial")
+summary(glm.1)
+
+# From the model summary, we can see that being Male increases the odds of alcohol high consumption and it is statistically significant. Same goes to the absences, having more absences increases the odds of high alcohol consumption and is again statistically significant. Age is not statistically significant predictor of alcohol high consumption. Again poor family relationship increases the odds of alcohol consumption and is not statistically significant.
+
+pormath$sex
+install.packages("ltm")
+biserial.cor(pormath$alc_use, pormath$sex)
+table(as.numeric(pormath$sex), pormath$sex)
+pormath$sex <- factor(pormath$sex)
+levels = c("0", "1")
+labels = c("F", "M")
+levels(pormath$sex)
+table(as.numeric(pormath$high_use), pormath$high_use)
+
+library(dplyr)
+glimpse(pormath$alc_use)
+levels(pormath$alc_use)
+var_label(pormath$alc_use)
+info
+pormath$alc_use
+install.packages("labelled")
+library(labelled)
+var_label(pormath$sex)
+
+
+library(ggplot2)
+library(GGally)
+
+
+ggpairs(pormath,
+upper = list(continuous = "density", combo = "box_no_facet"),
+lower = list(continuous = "points", combo = "dot_no_facet"))
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
