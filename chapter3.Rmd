@@ -5,7 +5,6 @@ output: html_document
 
 ```{r}
 
-                 
 library(readxl)
 pormath <- read_excel("~/IODS-project/data/pormath.xlsx")
 colnames(pormath)
@@ -52,7 +51,7 @@ levels(pormath$sex)
 table(as.numeric(pormath$sex), pormath$sex)
 
 #Labels look fine. Point-biserial correlation is used to assess the relationship between continues variable and categorical variable
-install.packages("ltm")
+
 library(ltm)
 biserial.cor(pormath$alc_use, pormath$sex)
 
@@ -72,7 +71,7 @@ summary(glm.1)
 confint(glm.1)
 
 
-install.packages("tidyverse")
+
 library(tidyverse)
 
 probabilities <- glm.1 %>% predict(pormath, type = "response")
