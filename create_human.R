@@ -20,11 +20,19 @@ names(gii) [4] <- "MatMortRatio"
 names(gii) [9] <- "LabForParFe"
 names(gii) [10] <- "LabForParMa"
 names(gii)
+names(hd)
+names (hd) [3] <- "HDI"
+names (hd) [4] <- "LEB"
+names (hd) [5] <- "ExYeEdu"
+names (hd) [6] <- "MEYED"
+names (hd) [7] <- "GNI"
+names (hd) [8] <- "GNI,HDI"
+names(hd)
+gii$edu2Fedu2M <- (gii$FeSecondEdu + gii$MaSecondEdu) / 2
+gii$labFlabM <- (gii$LabForParFe + gii$LabForParMa) / 2
 
-gii$edu2F/edu2M = (gii$FeSecondEdu + gii$MaSecondEdu) / 2
+library(dplyr)
+human <- inner_join (gii, hd)
 
-human <- filter(n==2, id.m-id.p>650) %>%  
-  inner_join(gii,by=c("id.p"="id"),suffix=c("",".p")) %>%
-  inner_join(hd,by=c("id.m"="id"),suffix=c("",".m")) %>%
-
+str(human)
   
