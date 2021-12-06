@@ -31,8 +31,39 @@ names(hd)
 gii$edu2Fedu2M <- (gii$FeSecondEdu + gii$MaSecondEdu) / 2
 gii$labFlabM <- (gii$LabForParFe + gii$LabForParMa) / 2
 
+
+#EXERCISE 5  5.12.2021
+
 library(dplyr)
 human <- inner_join (gii, hd)
 
 str(human)
-  
+
+write.table(human, "data/human.txt")
+
+human <- read.table ("~/IODS-project/data/human.txt", header = TRUE) 
+install.packages("stringr")
+library(stringr)
+str_replace(human$GNI, pattern=",", replace ="") %>% as.numeric
+na.omit(human)
+colnames(human)
+library(dplyr)
+keep <- c("Country", "GNI", "LEB", "MatMortRatio", "MaSecondEdu", "ExYeEdu", "AdolesBirRa", "LabForParFe", "LabForParMa")
+
+human <- select(human, one_of(keep))
+complete.cases(human)
+
+human_ <- filter(human, complete.cases(human))
+
+str(human_)
+
+human_ <- select(human, -Region)
+
+rownames(human) <- human$Country
+
+rownames(human)
+
+human_ <- select(human, -Country)
+str(human_)
+
+write.table(human_, "data/human_.txt")
