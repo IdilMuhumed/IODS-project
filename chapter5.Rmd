@@ -1,5 +1,5 @@
 ---
-title: "Dimensionality reduction techniques, Chapter 5"
+title: Dimensionality reduction techniques, Chapter 5
 output: html_document
 ---
 ```{r}
@@ -56,7 +56,7 @@ biplot(pca_human, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab
 # When we compare preforming PCA on standardized and non-standardized data we see big differences. For example, when PCA was performed on non-standardized data PCA 1 captured all of the variance. (100%). This however, changed when we standardized the data. As you can see from the table PCA captures around 60% of the variance and PC2 around 14%. 
 ```
 ```{r}
-# The first Principal component dimensions explain almost 75% of the variance. In these dimensions Maternal mortality variable and adolescent birth rate are highly correlated. 
+# The first and second Principal component dimensions explain almost 75% of the variance. In these dimensions Maternal mortality variable and adolescent birth rate are highly correlated. 
 ```
 
 
