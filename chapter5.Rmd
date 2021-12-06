@@ -1,0 +1,87 @@
+---
+title: "Dimensionality reduction techniques, Chapter 5"
+output: html_document
+---
+```{r}
+human1 <- read.table ("~/IODS-project/data/human.txt", header = TRUE) 
+str(human1)
+library(ggplot2)
+library(GGally)
+
+ggpairs(human1, lower = list(combo = wrap("facethist", bins = 20)))
+
+# Many of the variables detected seem to correlations. Life expectancy at birth (LEB) and Expected years of education (ExYeEdu) have strong positive correlation (r = 0.77). LEB also has a strong but negative association with Adolescent birth rate (AdolesBirRa) (r = -0.8). On the other hand, expected years of education has strong negative correlation with maternal mortality ratio (MatMorRa) (-0.7). It is also important to mention that maternal secondary education (MatSecondEdu) has strong positive association with LEB (r = 0.69).
+```
+```{r}
+#PRINCIPAL COMPONENT ANALYSIS
+
+#Performing principle component analysis on the not standardized human data.
+humanPCA <- prcomp(human1)
+
+#Checking summary
+s <- summary(humanPCA)
+s
+# Exploring rounded percentages of variance captured by each PC
+pca_pr <- round(100*s$importance[2,], digits = 1) 
+pca_pr
+# creating an object pc_lab to be used as axis labels
+pc_lab <- paste0(names(pca_pr), " (", pca_pr, "%)")
+
+# Drawing the plot
+biplot(humanPCA, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab[1], ylab = pc_lab[2])
+
+
+
+
+
+
+```
+```{r}
+#REPEATING THE ANALYSIS WITH STANDARDISED DATA
+human1_std <- scale(human1)
+summary(human1_std)
+
+pca_human <- prcomp(human1_std)
+s <- summary(pca_human)
+s
+# Exploring rounded percentages of variance captured by each PC
+pca_pr <- round(100*s$importance[2,], digits = 1) 
+pca_pr
+# creating an object pc_lab to be used as axis labels
+pc_lab <- paste0(names(pca_pr), " (", pca_pr, "%)")
+
+# Drawing the plot
+biplot(pca_human, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab[1], ylab = pc_lab[2])
+
+# When we compare preforming PCA on standardized and non-standardized data we see big differences. For example, when PCA was performed on non-standardized data PCA 1 captured all of the variance. (100%). This however, changed when we standardized the data. As you can see from the table PCA captures around 60% of the variance and PC2 around 14%. 
+```
+```{r}
+# The first Principal component dimensions explain almost 75% of the variance. In these dimensions Maternal mortality variable and adolescent birth rate are highly correlated. 
+```
+
+
+```{r}
+library(FactoMineR)
+data("tea")
+dim(tea)
+str(tea)
+
+keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
+
+# selecting columns to create a new dataset
+tea_time <- select(tea, one_of(keep_columns))
+
+
+# visualize the dataset
+gather(tea_time) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+
+mca <- MCA(tea_time, graph = FALSE)
+
+summary(mca)
+
+# visualizing MCA
+plot(mca, invisible=c("ind"), habillage = "quali")
+
+
+```
+
