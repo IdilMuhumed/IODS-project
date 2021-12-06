@@ -30,40 +30,46 @@ names (hd) [8] <- "GNI,HDI"
 names(hd)
 gii$edu2Fedu2M <- (gii$FeSecondEdu + gii$MaSecondEdu) / 2
 gii$labFlabM <- (gii$LabForParFe + gii$LabForParMa) / 2
-
+human <- inner_join (gii, hd)
+write.table(human, "data/human.txt")
 
 #EXERCISE 5  5.12.2021
 
 library(dplyr)
-human <- inner_join (gii, hd)
-
-str(human)
-
-write.table(human, "data/human.txt")
 
 human <- read.table ("~/IODS-project/data/human.txt", header = TRUE) 
 install.packages("stringr")
 library(stringr)
-str_replace(human$GNI, pattern=",", replace ="") %>% as.numeric
-na.omit(human)
+
+#Transforming GNI variable into numeric:
+
+human$GNI <- str_replace(human$GNI, pattern=",", replace ="") %>% as.numeric
+
 colnames(human)
 library(dplyr)
+
+# Selecting columns
+
 keep <- c("Country", "GNI", "LEB", "MatMortRatio", "MaSecondEdu", "ExYeEdu", "AdolesBirRa", "LabForParFe", "LabForParMa")
+
+#Omitting missing data
 
 human <- select(human, one_of(keep))
 complete.cases(human)
+human <- filter(human, complete.cases(human))
+str(human)
 
-human_ <- filter(human, complete.cases(human))
+#Removing observations which relates to regions instead of countries.
 
-str(human_)
+human <- subset(human, !(Country %in% c("World", "Europe and Central Asia", "Arab States", "East Asia and the Pacific", "Latin America and the Caribbean", "South Asia", "Sub-Saharan Africa"))) 
 
-human_ <- select(human, -Region)
-
+#Defining the row names by the country names
 rownames(human) <- human$Country
 
-rownames(human)
+#Deleting Country column
+human <- select(human, -Country)
+str(human)
 
-human_ <- select(human, -Country)
-str(human_)
+# The variable has 155 observations and 8 variables
 
-write.table(human_, "data/human_.txt")
+write.table(human, "data/human.txt")
